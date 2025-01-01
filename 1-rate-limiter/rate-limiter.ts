@@ -1,3 +1,3 @@
 export type RateLimiter = {
-  isAllowed: (key: string) => boolean;
+  isAllowed: (key: string, tokenCost?: number) => boolean;
 };

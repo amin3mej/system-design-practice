@@ -28,6 +28,45 @@ describe("Token Bucket Rate limiter", () => {
     expect(rateLimiter.isAllowed(key)).toBeFalse();
   });
 
+  test("it handles requests with cost greater than 1", () => {
+    const date = new Date();
+    setSystemTime(date);
+
+    const rateLimiter = createRateLimiter({
+      capacity: 3,
+      refillRatePerSecond: 1,
+    });
+
+    const key = "personalisedKey";
+
+    expect(rateLimiter.isAllowed(key, 3)).toBeTrue();
+    expect(rateLimiter.isAllowed(key)).toBeFalse();
+  });
+
+  test("refills the bucket ", () => {
+    const date = new Date();
+    setSystemTime(date);
+
+    const rateLimiter = createRateLimiter({
+      capacity: 3,
+      refillRatePerSecond: 2,
+    });
+
+    const key = "personalisedKey";
+
+    expect(rateLimiter.isAllowed(key)).toBeTrue();
+    expect(rateLimiter.isAllowed(key)).toBeTrue();
+    expect(rateLimiter.isAllowed(key)).toBeTrue();
+    expect(rateLimiter.isAllowed(key)).toBeFalse();
+
+    date.setSeconds(date.getSeconds() + 1);
+
+    setSystemTime(date);
+    expect(rateLimiter.isAllowed(key)).toBeTrue();
+    expect(rateLimiter.isAllowed(key)).toBeTrue();
+    expect(rateLimiter.isAllowed(key)).toBeFalse();
+  });
+
   test("it handles different keys properly", () => {
     const date = new Date();
     setSystemTime(date);

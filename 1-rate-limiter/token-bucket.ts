@@ -32,6 +32,7 @@ export const createRateLimiter = ({
 
     return newBucket;
   };
+
   return {
     isAllowed: (key: string, tokenCost: number = 1) => {
       const bucket = refill(key);
