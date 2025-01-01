@@ -38,7 +38,7 @@ export const createRateLimiter = ({
       const bucket = refill(key);
 
       if (bucket.tokens >= tokenCost) {
-        tokenBuckets[key]["tokens"] -= tokenCost;
+        tokenBuckets[key].tokens -= tokenCost;
         return true;
       } else {
         return false;
