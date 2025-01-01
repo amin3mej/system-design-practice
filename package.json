@@ -2,8 +2,15 @@
   "name": "system-design-practice",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "husky",
+    "lint": "bun eslint src --fix",
+    "format": "bun prettier . --write",
+    "start": "bun run src/index.ts"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +19,16 @@
     "bun": "^1.1.42"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@eslint/js": "^9.17.0",
+    "@types/bun": "latest",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2",
+    "typescript-eslint": "^8.19.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
