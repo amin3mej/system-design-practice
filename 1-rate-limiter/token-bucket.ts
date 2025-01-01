@@ -5,7 +5,7 @@ type Bucket = {
   tokens: number;
 };
 
-export const createRateLimiter = ({
+export const createTokenBucketRateLimiter = ({
   capacity,
   refillRatePerSecond,
 }: {
@@ -34,7 +34,7 @@ export const createRateLimiter = ({
   };
 
   return {
-    isAllowed: (key: string, tokenCost: number = 1) => {
+    isAllowed: async (key: string, tokenCost: number = 1) => {
       const bucket = refill(key);
 
       if (bucket.tokens >= tokenCost) {

@@ -1,10 +1,10 @@
 import { describe, expect, setSystemTime, test } from "bun:test";
 
-import { createRateLimiter } from "./token-bucket.ts";
+import { createTokenBucketRateLimiter } from "./token-bucket.ts";
 
 describe("Token Bucket Rate limiter", () => {
   test("it creates a rate limiter", () => {
-    const rateLimiter = createRateLimiter({
+    const rateLimiter = createTokenBucketRateLimiter({
       capacity: 5,
       refillRatePerSecond: 1,
     });
@@ -15,88 +15,88 @@ describe("Token Bucket Rate limiter", () => {
     const date = new Date();
     setSystemTime(date);
 
-    const rateLimiter = createRateLimiter({
+    const rateLimiter = createTokenBucketRateLimiter({
       capacity: 3,
       refillRatePerSecond: 1,
     });
 
     const key = "personalisedKey";
 
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeFalse();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeFalse();
   });
 
   test("it handles requests with cost greater than 1", () => {
     const date = new Date();
     setSystemTime(date);
 
-    const rateLimiter = createRateLimiter({
+    const rateLimiter = createTokenBucketRateLimiter({
       capacity: 3,
       refillRatePerSecond: 1,
     });
 
     const key = "personalisedKey";
 
-    expect(rateLimiter.isAllowed(key, 3)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeFalse();
+    expect(rateLimiter.isAllowed(key, 3)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeFalse();
   });
 
   test("refills the bucket slowly after a short period of time", () => {
     const date = new Date();
     setSystemTime(date);
 
-    const rateLimiter = createRateLimiter({
+    const rateLimiter = createTokenBucketRateLimiter({
       capacity: 3,
       refillRatePerSecond: 2,
     });
 
     const key = "personalisedKey";
 
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeFalse();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeFalse();
 
     date.setSeconds(date.getSeconds() + 1);
 
     setSystemTime(date);
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeFalse();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeFalse();
   });
 
   test("refills the bucket completely after a long period of time", () => {
     const date = new Date();
     setSystemTime(date);
 
-    const rateLimiter = createRateLimiter({
+    const rateLimiter = createTokenBucketRateLimiter({
       capacity: 3,
       refillRatePerSecond: 2,
     });
 
     const key = "personalisedKey";
 
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeFalse();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeFalse();
 
     date.setMinutes(date.getMinutes() + 1);
 
     setSystemTime(date);
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeTrue();
-    expect(rateLimiter.isAllowed(key)).toBeFalse();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeTrue();
+    expect(rateLimiter.isAllowed(key)).resolves.toBeFalse();
   });
 
   test("it handles different keys properly", () => {
     const date = new Date();
     setSystemTime(date);
 
-    const rateLimiter = createRateLimiter({
+    const rateLimiter = createTokenBucketRateLimiter({
       capacity: 3,
       refillRatePerSecond: 1,
     });
@@ -111,6 +111,6 @@ describe("Token Bucket Rate limiter", () => {
     rateLimiter.isAllowed(firstKey);
     rateLimiter.isAllowed(firstKey);
 
-    expect(rateLimiter.isAllowed(secondKey)).toBeTrue();
+    expect(rateLimiter.isAllowed(secondKey)).resolves.toBeTrue();
   });
 });
