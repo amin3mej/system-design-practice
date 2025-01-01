@@ -5,12 +5,18 @@
   "type": "module",
   "scripts": {
     "prepare": "husky",
-    "lint": "bun eslint src --fix",
+    "lint": "bun eslint . --fix",
     "format": "bun prettier . --write",
-    "start": "bun run src/index.ts"
+    "test": "bun test --coverage"
+  },
+  "hooks": {
+    "pre-commit": "npm run test"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "**/*": [
+      "bun run lint",
+      "bun run format"
+    ]
   },
   "keywords": [],
   "author": "",
